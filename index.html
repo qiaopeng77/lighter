@@ -8,7 +8,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #0d0d14;
+      background: #0a0a0f;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -17,304 +17,219 @@
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
       overflow: hidden;
       user-select: none;
-      -webkit-tap-highlight-color: transparent;
     }
-
-    /* 背景光晕 */
-    body::before {
-      content: '';
-      position: fixed;
-      bottom: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 300px; height: 300px;
-      background: radial-gradient(ellipse, rgba(255,140,0,0.06) 0%, transparent 70%);
-      pointer-events: none;
-      transition: opacity 0.5s;
-      opacity: 0;
-    }
-    body.lit::before { opacity: 1; }
 
     /* 计数器 */
     .counter-wrap {
       position: fixed;
-      top: 44px; left: 50%;
+      top: 40px;
+      left: 50%;
       transform: translateX(-50%);
       text-align: center;
     }
     .counter-num {
-      font-size: 76px;
+      font-size: 72px;
       font-weight: 700;
       color: #fff;
       line-height: 1;
       transition: transform 0.15s ease;
-      text-shadow: 0 0 30px rgba(255,160,0,0.3);
     }
-    .counter-num.bump { transform: scale(1.25); }
+    .counter-num.bump {
+      transform: scale(1.3);
+    }
     .counter-label {
-      font-size: 13px;
-      color: rgba(255,255,255,0.35);
-      margin-top: 6px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 4px;
+      letter-spacing: 2px;
     }
 
-    /* 舞台 */
+    /* 主舞台 */
     .stage {
       position: relative;
-      width: 300px;
-      height: 360px;
-      margin-top: 10px;
-      cursor: pointer;
+      width: 200px;
+      height: 340px;
+      margin-top: 20px;
     }
 
-    /* ===== ZIPPO ===== */
-    .zippo {
+    /* 打火机 */
+    .lighter {
       position: absolute;
-      bottom: 30px;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 110px;
-      height: 160px;
+      width: 80px;
+      height: 140px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
     }
+    .lighter:active { transform: translateX(-50%) scale(0.96); }
 
-    /* 底座 */
-    .z-base {
+    .lighter-body {
       position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 80px;
-      background: linear-gradient(135deg, #c8a84b 0%, #e8c96a 30%, #b8922a 60%, #d4a840 100%);
-      border-radius: 4px 4px 8px 8px;
-      box-shadow:
-        inset 1px 0 2px rgba(255,255,255,0.3),
-        inset -2px 0 4px rgba(0,0,0,0.3),
-        0 6px 24px rgba(0,0,0,0.6);
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 110px;
+      background: linear-gradient(160deg, #e8c84a 0%, #c9a020 40%, #a07810 100%);
+      border-radius: 10px 10px 14px 14px;
+      box-shadow: inset -4px 0 8px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.5);
     }
-    /* 底座几何纹 */
-    .z-base::before {
+    .lighter-body::after {
       content: '';
       position: absolute;
-      inset: 8px;
-      background:
-        repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 6px,
-          rgba(0,0,0,0.08) 6px,
-          rgba(0,0,0,0.08) 7px
-        ),
-        repeating-linear-gradient(
-          -45deg,
-          transparent,
-          transparent 6px,
-          rgba(255,255,255,0.06) 6px,
-          rgba(255,255,255,0.06) 7px
-        );
-      border-radius: 2px;
+      top: 12px; left: 8px; right: 8px; height: 30px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 6px;
     }
-    /* 底座铰链槽 */
-    .z-base::after {
-      content: '';
+    .lighter-top {
       position: absolute;
-      top: 0; left: 50%; transform: translateX(-50%);
-      width: 14px; height: 4px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 0 0 3px 3px;
-    }
-
-    /* 盖子 */
-    .z-lid {
-      position: absolute;
-      bottom: 78px; left: 0; right: 0;
-      height: 82px;
-      background: linear-gradient(135deg, #d4b050 0%, #f0d878 30%, #c09030 60%, #e0b848 100%);
-      border-radius: 8px 8px 4px 4px;
-      box-shadow:
-        inset 1px 0 2px rgba(255,255,255,0.35),
-        inset -2px 0 4px rgba(0,0,0,0.25);
-      transform-origin: bottom center;
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .z-lid.open {
-      transform: rotateX(-110deg);
-    }
-
-    /* 盖子几何图案 */
-    .z-lid-deco {
-      position: absolute;
-      inset: 0;
-      border-radius: 8px 8px 4px 4px;
-      overflow: hidden;
-    }
-    .z-lid-deco svg {
-      width: 100%; height: 100%;
-    }
-
-    /* 盖子高光 */
-    .z-lid::after {
-      content: '';
-      position: absolute;
-      top: 6px; left: 6px; right: 6px; height: 20px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
-      border-radius: 4px;
-    }
-
-    /* 内胆（盖子打开后露出） */
-    .z-inner {
-      position: absolute;
-      bottom: 78px; left: 8px; right: 8px;
-      height: 70px;
-      background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+      bottom: 108px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 22px;
+      background: linear-gradient(180deg, #888 0%, #555 100%);
       border-radius: 4px 4px 0 0;
-      overflow: hidden;
     }
-    .z-inner::before {
-      content: '';
+    .lighter-nozzle {
       position: absolute;
-      top: 8px; left: 50%; transform: translateX(-50%);
-      width: 18px; height: 40px;
-      background: linear-gradient(180deg, #555 0%, #333 100%);
-      border-radius: 3px;
-    }
-    /* 喷嘴 */
-    .z-nozzle {
-      position: absolute;
-      top: 4px; left: 50%; transform: translateX(-50%);
-      width: 10px; height: 8px;
-      background: #444;
-      border-radius: 2px 2px 0 0;
-      z-index: 2;
+      bottom: 128px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 10px;
+      background: #333;
+      border-radius: 3px 3px 0 0;
     }
 
     /* 火焰 */
     .flame-wrap {
       position: absolute;
-      bottom: 148px;
+      bottom: 136px;
       left: 50%;
       transform: translateX(-50%);
-      width: 40px; height: 70px;
+      width: 40px;
+      height: 70px;
       opacity: 0;
-      transition: opacity 0.25s ease;
-      z-index: 10;
+      transition: opacity 0.2s ease;
     }
     .flame-wrap.show { opacity: 1; }
 
     .flame {
       position: absolute;
-      bottom: 0; left: 50%;
+      bottom: 0;
+      left: 50%;
       transform: translateX(-50%);
-      width: 28px; height: 60px;
-      background: radial-gradient(ellipse at 50% 100%,
-        #fff 0%, #ffe566 15%, #ffaa00 45%, #ff5500 75%, transparent 100%);
+      width: 28px;
+      height: 60px;
+      background: radial-gradient(ellipse at 50% 100%, #fff 0%, #ffe066 20%, #ff9900 50%, #ff4400 75%, transparent 100%);
       border-radius: 50% 50% 30% 30%;
-      animation: flicker 0.1s infinite alternate;
-      filter: blur(0.5px);
+      animation: flicker 0.12s infinite alternate;
+      filter: blur(1px);
     }
     .flame::after {
       content: '';
       position: absolute;
-      bottom: 4px; left: 50%; transform: translateX(-50%);
-      width: 13px; height: 28px;
-      background: radial-gradient(ellipse at 50% 100%, #fff 0%, #ffe8a0 50%, transparent 100%);
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 30px;
+      background: radial-gradient(ellipse at 50% 100%, #fff 0%, #ffe8a0 40%, transparent 100%);
       border-radius: 50% 50% 30% 30%;
     }
-    /* 火焰光晕 */
-    .flame-glow {
-      position: absolute;
-      bottom: -10px; left: 50%; transform: translateX(-50%);
-      width: 60px; height: 60px;
-      background: radial-gradient(ellipse, rgba(255,140,0,0.4) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: glow-pulse 0.15s infinite alternate;
-    }
-    @keyframes glow-pulse {
-      0% { transform: translateX(-50%) scale(0.9); opacity: 0.6; }
-      100% { transform: translateX(-50%) scale(1.1); opacity: 1; }
-    }
+
     @keyframes flicker {
-      0%   { transform: translateX(-50%) scaleX(1)    scaleY(1)    skewX(0deg); }
-      25%  { transform: translateX(-50%) scaleX(0.88) scaleY(1.06) skewX(3deg); }
-      50%  { transform: translateX(-50%) scaleX(1.07) scaleY(0.95) skewX(-2deg); }
-      75%  { transform: translateX(-50%) scaleX(0.93) scaleY(1.05) skewX(2deg); }
-      100% { transform: translateX(-50%) scaleX(1.04) scaleY(1.02) skewX(-1deg); }
+      0%   { transform: translateX(-50%) scaleX(1)   scaleY(1)   skewX(0deg); }
+      25%  { transform: translateX(-50%) scaleX(0.92) scaleY(1.04) skewX(2deg); }
+      50%  { transform: translateX(-50%) scaleX(1.05) scaleY(0.97) skewX(-1deg); }
+      75%  { transform: translateX(-50%) scaleX(0.95) scaleY(1.06) skewX(1deg); }
+      100% { transform: translateX(-50%) scaleX(1.02) scaleY(1.02) skewX(-2deg); }
     }
 
     /* 香烟 */
     .cig-wrap {
       position: absolute;
-      bottom: 162px;
+      top: 0;
       left: 50%;
-      transform-origin: left center;
-      transform: translateX(80px) translateY(-60px) rotate(-35deg);
+      transform: translateX(-50%) translateY(-30px);
       opacity: 0;
-      transition: transform 0.55s cubic-bezier(0.22,1,0.36,1), opacity 0.4s ease;
-      width: 210px; height: 22px;
-      pointer-events: none;
-      z-index: 5;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      width: 120px;
+      height: 180px;
     }
     .cig-wrap.show {
       opacity: 1;
-      transform: translateX(-18px) translateY(0px) rotate(-35deg);
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 烟体 SVG */
+    .cig-svg {
+      width: 120px;
+      height: 180px;
     }
 
     /* 烟雾 */
     .smoke-wrap {
       position: absolute;
-      bottom: 182px;
-      left: calc(50% - 40px);
-      width: 44px; height: 80px;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 80px;
       opacity: 0;
       transition: opacity 0.5s ease;
-      pointer-events: none;
-      z-index: 6;
     }
     .smoke-wrap.show { opacity: 1; }
-    .sp {
+
+    .smoke-particle {
       position: absolute;
       bottom: 0;
       border-radius: 50%;
-      background: rgba(210,210,210,0.4);
-      animation: rise 2.4s ease-out infinite;
+      background: rgba(200,200,200,0.5);
+      animation: rise 2s ease-out infinite;
     }
-    .sp:nth-child(1) { width: 10px; height: 10px; left: 12px; animation-delay: 0s; }
-    .sp:nth-child(2) { width: 15px; height: 15px; left: 20px; animation-delay: 0.5s; }
-    .sp:nth-child(3) { width: 9px;  height: 9px;  left: 8px;  animation-delay: 1s; }
-    .sp:nth-child(4) { width: 13px; height: 13px; left: 24px; animation-delay: 1.6s; }
+    .smoke-particle:nth-child(1) { width: 12px; height: 12px; left: 20px; animation-delay: 0s; }
+    .smoke-particle:nth-child(2) { width: 16px; height: 16px; left: 30px; animation-delay: 0.4s; }
+    .smoke-particle:nth-child(3) { width: 10px; height: 10px; left: 14px; animation-delay: 0.8s; }
+    .smoke-particle:nth-child(4) { width: 14px; height: 14px; left: 26px; animation-delay: 1.2s; }
+
     @keyframes rise {
-      0%   { transform: translateY(0) scale(0.5); opacity: 0.55; }
-      50%  { transform: translateY(-38px) translateX(7px) scale(1.4); opacity: 0.25; }
-      100% { transform: translateY(-78px) translateX(-5px) scale(2.2); opacity: 0; }
+      0%   { transform: translateY(0) scale(0.5); opacity: 0.6; }
+      50%  { transform: translateY(-40px) translateX(8px) scale(1.2); opacity: 0.3; }
+      100% { transform: translateY(-80px) translateX(-4px) scale(1.8); opacity: 0; }
     }
 
-    /* 提示 */
+    /* 按钮提示 */
     .hint {
       position: fixed;
-      bottom: 44px; left: 50%;
+      bottom: 50px;
+      left: 50%;
       transform: translateX(-50%);
       font-size: 13px;
-      color: rgba(255,255,255,0.28);
-      letter-spacing: 2px;
-      animation: pulse 2.2s ease-in-out infinite;
-      white-space: nowrap;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+      animation: pulse 2s ease-in-out infinite;
     }
     @keyframes pulse {
-      0%,100% { opacity: 0.28; }
-      50% { opacity: 0.65; }
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
     }
 
-    /* 涟漪 */
+    /* 点击涟漪 */
     .ripple {
       position: fixed;
       border-radius: 50%;
-      background: rgba(255,160,0,0.2);
+      background: rgba(255, 160, 0, 0.3);
       transform: scale(0);
-      animation: rpl 0.7s ease-out forwards;
+      animation: ripple-anim 0.6s ease-out forwards;
       pointer-events: none;
     }
-    @keyframes rpl { to { transform: scale(6); opacity: 0; } }
-
-    /* 3D perspective for lid */
-    .zippo { perspective: 400px; }
-    .z-lid { transform-style: preserve-3d; }
+    @keyframes ripple-anim {
+      to { transform: scale(4); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -324,92 +239,72 @@
     <div class="counter-label">今日已抽</div>
   </div>
 
-  <div class="stage" id="stage" onclick="ignite(event)">
-
+  <div class="stage">
+    <!-- 烟雾 -->
     <div class="smoke-wrap" id="smoke">
-      <div class="sp"></div><div class="sp"></div>
-      <div class="sp"></div><div class="sp"></div>
+      <div class="smoke-particle"></div>
+      <div class="smoke-particle"></div>
+      <div class="smoke-particle"></div>
+      <div class="smoke-particle"></div>
     </div>
 
+    <!-- 香烟 -->
     <div class="cig-wrap" id="cig">
-      <svg width="210" height="22" viewBox="0 0 210 22" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="6" cy="11" rx="6" ry="7" fill="#ff6600"/>
-        <ellipse cx="7.5" cy="11" rx="4" ry="5" fill="#ff9900"/>
-        <ellipse cx="9" cy="11" rx="2.5" ry="3" fill="#ffdd00"/>
-        <rect x="12" y="4" width="154" height="14" rx="3" fill="url(#cg)"/>
-        <line x1="55"  y1="4" x2="55"  y2="18" stroke="rgba(0,0,0,0.06)" stroke-width="0.8"/>
-        <line x1="98"  y1="4" x2="98"  y2="18" stroke="rgba(0,0,0,0.06)" stroke-width="0.8"/>
-        <line x1="140" y1="4" x2="140" y2="18" stroke="rgba(0,0,0,0.06)" stroke-width="0.8"/>
-        <rect x="166" y="4" width="40" height="14" rx="3" fill="#c8845a"/>
-        <rect x="166" y="4" width="3"  height="14" fill="#b07040"/>
-        <rect x="12" y="5" width="154" height="3" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+      <svg class="cig-svg" viewBox="0 0 120 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 烟体 -->
+        <rect x="50" y="30" width="20" height="130" rx="4" fill="url(#cigGrad)"/>
+        <!-- 过滤嘴 -->
+        <rect x="50" y="140" width="20" height="30" rx="4" fill="#d4956a"/>
+        <rect x="50" y="140" width="20" height="4" fill="#c07850"/>
+        <!-- 烟纸纹理 -->
+        <line x1="50" y1="60" x2="70" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+        <line x1="50" y1="80" x2="70" y2="80" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+        <line x1="50" y1="100" x2="70" y2="100" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+        <line x1="50" y1="120" x2="70" y2="120" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+        <!-- 燃烧端 -->
+        <ellipse cx="60" cy="32" rx="10" ry="5" fill="#ff6600" id="cig-tip"/>
+        <ellipse cx="60" cy="30" rx="8" ry="4" fill="#ff9900"/>
+        <ellipse cx="60" cy="29" rx="5" ry="3" fill="#ffcc00"/>
         <defs>
-          <linearGradient id="cg" x1="0" y1="0" x2="0" y2="22" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="#f5f5f5"/>
-            <stop offset="50%"  stop-color="#ffffff"/>
-            <stop offset="100%" stop-color="#cccccc"/>
+          <linearGradient id="cigGrad" x1="50" y1="0" x2="70" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#f0f0f0"/>
+            <stop offset="40%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#d8d8d8"/>
           </linearGradient>
         </defs>
       </svg>
     </div>
 
-    <div class="flame-wrap" id="flame">
-      <div class="flame-glow"></div>
-      <div class="flame"></div>
-    </div>
-
-    <div class="zippo">
-      <div class="z-inner">
-        <div class="z-nozzle"></div>
+    <!-- 打火机 -->
+    <div class="lighter" id="lighter" onclick="ignite(event)">
+      <div class="flame-wrap" id="flame">
+        <div class="flame"></div>
       </div>
-      <div class="z-lid" id="zlid">
-        <div class="z-lid-deco">
-          <!-- 几何装饰 SVG -->
-          <svg viewBox="0 0 110 82" xmlns="http://www.w3.org/2000/svg">
-            <!-- 外框线 -->
-            <rect x="8" y="8" width="94" height="66" rx="3"
-              fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-            <!-- 中心菱形 -->
-            <polygon points="55,18 80,41 55,64 30,41"
-              fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2"/>
-            <!-- 内菱形 -->
-            <polygon points="55,28 70,41 55,54 40,41"
-              fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
-            <!-- 对角线 -->
-            <line x1="8" y1="8"   x2="30" y2="41" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-            <line x1="102" y1="8"  x2="80" y2="41" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-            <line x1="8" y1="74"  x2="30" y2="41" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-            <line x1="102" y1="74" x2="80" y2="41" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
-            <!-- 四角小方块 -->
-            <rect x="10" y="10" width="6" height="6" fill="rgba(255,255,255,0.12)" rx="1"/>
-            <rect x="94" y="10" width="6" height="6" fill="rgba(255,255,255,0.12)" rx="1"/>
-            <rect x="10" y="66" width="6" height="6" fill="rgba(255,255,255,0.12)" rx="1"/>
-            <rect x="94" y="66" width="6" height="6" fill="rgba(255,255,255,0.12)" rx="1"/>
-            <!-- 中心点 -->
-            <circle cx="55" cy="41" r="4" fill="rgba(255,255,255,0.2)"/>
-            <circle cx="55" cy="41" r="2" fill="rgba(255,255,255,0.35)"/>
-          </svg>
-        </div>
-      </div>
-      <div class="z-base"></div>
+      <div class="lighter-nozzle"></div>
+      <div class="lighter-top"></div>
+      <div class="lighter-body"></div>
     </div>
-
   </div>
 
-  <div class="hint" id="hint">点击屏幕点火</div>
+  <div class="hint" id="hint">点击打火机</div>
 
   <script>
-    const KEY = 'cig_zippo_v1';
-    const KEY_DATE = 'cig_zippo_date';
+    const KEY = 'cig_count_today';
+    const KEY_DATE = 'cig_count_date';
 
-    function getToday() { return new Date().toLocaleDateString('zh-CN'); }
+    function getToday() {
+      return new Date().toLocaleDateString('zh-CN');
+    }
+
     function loadCount() {
-      if (localStorage.getItem(KEY_DATE) !== getToday()) {
+      const saved = localStorage.getItem(KEY_DATE);
+      if (saved !== getToday()) {
         localStorage.setItem(KEY, '0');
         localStorage.setItem(KEY_DATE, getToday());
       }
       return parseInt(localStorage.getItem(KEY) || '0');
     }
+
     function saveCount(n) {
       localStorage.setItem(KEY, String(n));
       localStorage.setItem(KEY_DATE, getToday());
@@ -420,58 +315,56 @@
 
     const countEl = document.getElementById('count');
     const flameEl = document.getElementById('flame');
-    const cigEl   = document.getElementById('cig');
+    const cigEl = document.getElementById('cig');
     const smokeEl = document.getElementById('smoke');
-    const hintEl  = document.getElementById('hint');
-    const zlidEl  = document.getElementById('zlid');
+    const hintEl = document.getElementById('hint');
 
     countEl.textContent = count;
 
     function ignite(e) {
       if (animating) return;
       animating = true;
-      hintEl.style.opacity = '0';
-      document.body.classList.add('lit');
 
       // 涟漪
-      const r = document.createElement('div');
-      r.className = 'ripple';
-      const s = 60;
-      r.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX-s/2}px;top:${e.clientY-s/2}px`;
-      document.body.appendChild(r);
-      setTimeout(() => r.remove(), 800);
+      const ripple = document.createElement('div');
+      ripple.className = 'ripple';
+      const size = 60;
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - size/2}px;top:${e.clientY - size/2}px`;
+      document.body.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
 
-      // 1. 开盖
-      zlidEl.classList.add('open');
+      hintEl.style.opacity = '0';
 
-      // 2. 点火
-      setTimeout(() => flameEl.classList.add('show'), 350);
+      // 1. 点火
+      flameEl.classList.add('show');
 
-      // 3. 烟滑入
-      setTimeout(() => cigEl.classList.add('show'), 600);
+      // 2. 烟出现
+      setTimeout(() => {
+        cigEl.classList.add('show');
+      }, 400);
 
-      // 4. 烟雾
-      setTimeout(() => smokeEl.classList.add('show'), 1100);
+      // 3. 烟雾
+      setTimeout(() => {
+        smokeEl.classList.add('show');
+      }, 900);
 
-      // 5. 计数
+      // 4. 计数+1
       setTimeout(() => {
         count++;
         saveCount(count);
         countEl.textContent = count;
         countEl.classList.add('bump');
         setTimeout(() => countEl.classList.remove('bump'), 200);
-      }, 1200);
+      }, 1000);
 
-      // 6. 收起
+      // 5. 收起
       setTimeout(() => {
+        flameEl.classList.remove('show');
         cigEl.classList.remove('show');
         smokeEl.classList.remove('show');
-        flameEl.classList.remove('show');
-        setTimeout(() => zlidEl.classList.remove('open'), 200);
-        document.body.classList.remove('lit');
         animating = false;
         hintEl.style.opacity = '';
-      }, 3200);
+      }, 2800);
     }
   </script>
 </body>
