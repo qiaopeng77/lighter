@@ -50,11 +50,7 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpolygon points='0,0 22,0 8,18' fill='rgba(0,0,0,0.07)'/%3E%3Cpolygon points='22,0 56,0 56,12 38,22' fill='rgba(255,255,255,0.05)'/%3E%3Cpolygon points='8,18 28,10 20,34' fill='rgba(0,0,0,0.06)'/%3E%3Cpolygon points='38,22 56,12 56,38 44,30' fill='rgba(0,0,0,0.08)'/%3E%3Cpolygon points='0,18 8,18 20,34 4,42' fill='rgba(255,255,255,0.04)'/%3E%3Cpolygon points='20,34 38,22 44,30 30,48' fill='rgba(0,0,0,0.05)'/%3E%3Cpolygon points='4,42 20,34 14,56 0,50' fill='rgba(0,0,0,0.07)'/%3E%3Cpolygon points='44,30 56,38 56,58 40,52' fill='rgba(255,255,255,0.05)'/%3E%3Cpolygon points='14,56 30,48 26,68 10,64' fill='rgba(0,0,0,0.06)'/%3E%3Cpolygon points='30,48 40,52 46,68 32,72' fill='rgba(0,0,0,0.08)'/%3E%3Cpolygon points='0,50 14,56 10,64 0,72' fill='rgba(255,255,255,0.04)'/%3E%3Cpolygon points='40,52 56,58 56,76 48,70' fill='rgba(0,0,0,0.06)'/%3E%3Cpolygon points='10,64 26,68 18,84 6,80' fill='rgba(0,0,0,0.07)'/%3E%3Cpolygon points='32,72 46,68 50,84 36,90' fill='rgba(255,255,255,0.05)'/%3E%3Cpolygon points='0,72 10,64 6,80 0,88' fill='rgba(0,0,0,0.05)'/%3E%3Cpolygon points='48,70 56,76 56,100 42,92' fill='rgba(0,0,0,0.07)'/%3E%3Cpolygon points='6,80 18,84 12,100 0,100 0,88' fill='rgba(0,0,0,0.06)'/%3E%3Cpolygon points='36,90 50,84 56,100 22,100' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E");
       background-size: 100% 100%;
     }
-    /* 高光条 */
-    .lighter-body::after {
-      content: ''; position: absolute; top: 10px; left: 7px; right: 7px; height: 22px;
-      background: rgba(255,255,255,.15); border-radius: 3px;
-    }
+    /* 高光条已移除 */
     .lighter-top {
       position: absolute; bottom: 98px; left: 50%; transform: translateX(-50%);
       width: 40px; height: 20px;
@@ -69,7 +65,7 @@
     /* 按钮底座 */
     .lighter-btn-base {
       position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
-      width: 28px; height: 10px;
+      width: 40px; height: 10px;
       background: linear-gradient(180deg, #555 0%, #333 100%);
       border-radius: 5px;
       box-shadow: 0 3px 6px rgba(0,0,0,.5);
@@ -77,22 +73,22 @@
     /* 按钮本体 */
     .lighter-btn {
       position: absolute; bottom: 66px; left: 50%; transform: translateX(-50%) translateY(0px);
-      width: 24px; height: 14px;
-      background: linear-gradient(180deg, #e03020 0%, #a01808 100%);
+      width: 36px; height: 14px;
+      background: linear-gradient(180deg, #c89820 0%, #8a6408 100%);
       border-radius: 4px 4px 3px 3px;
-      box-shadow: 0 4px 0 #6a0f05, 0 6px 10px rgba(0,0,0,.4);
+      box-shadow: 0 4px 0 #5a3e04, 0 6px 10px rgba(0,0,0,.4);
       cursor: pointer;
       transition: transform .08s ease, box-shadow .08s ease;
       z-index: 2;
     }
     .lighter-btn::after {
       content: '';
-      position: absolute; top: 3px; left: 4px; right: 4px; height: 3px;
-      background: rgba(255,255,255,.25); border-radius: 2px;
+      position: absolute; top: 3px; left: 5px; right: 5px; height: 3px;
+      background: rgba(255,255,255,.2); border-radius: 2px;
     }
     .lighter-btn.pressed {
       transform: translateX(-50%) translateY(4px);
-      box-shadow: 0 0px 0 #6a0f05, 0 2px 6px rgba(0,0,0,.4);
+      box-shadow: 0 0px 0 #5a3e04, 0 2px 6px rgba(0,0,0,.4);
     }
 
     /*
@@ -213,11 +209,11 @@
     <!-- 香烟：左=烟头(燃烧端)，右=滤嘴 -->
     <div class="cig-wrap" id="cig">
       <svg width="220" height="22" viewBox="0 0 220 22" xmlns="http://www.w3.org/2000/svg">
-        <!-- 烟头燃烧端：方形圆角 -->
-        <rect x="0" y="4" width="14" height="14" rx="2" fill="#cc4400"/>
-        <rect x="1" y="5" width="12" height="12" rx="1.5" fill="#ff6600"/>
-        <rect x="3" y="7" width="8" height="8" rx="1" fill="#ff9900"/>
-        <rect x="5" y="9" width="4" height="4" rx=".5" fill="#ffdd00"/>
+        <!-- 烟头燃烧端：方形圆角，高度更小 -->
+        <rect x="0" y="7" width="14" height="8" rx="1.5" fill="#cc4400"/>
+        <rect x="1" y="7.5" width="12" height="7" rx="1" fill="#ff6600"/>
+        <rect x="3" y="9" width="8" height="4" rx=".8" fill="#ff9900"/>
+        <rect x="5" y="10" width="4" height="2" rx=".4" fill="#ffdd00"/>
         <!-- 烟体白纸 -->
         <rect x="14" y="4" width="160" height="14" rx="3" fill="url(#cg)"/>
         <line x1="58"  y1="4" x2="58"  y2="18" stroke="rgba(0,0,0,.06)" stroke-width=".8"/>
