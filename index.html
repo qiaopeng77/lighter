@@ -66,6 +66,35 @@
       width: 12px; height: 10px; background: #333; border-radius: 3px 3px 0 0;
     }
 
+    /* 按钮底座 */
+    .lighter-btn-base {
+      position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+      width: 28px; height: 10px;
+      background: linear-gradient(180deg, #555 0%, #333 100%);
+      border-radius: 5px;
+      box-shadow: 0 3px 6px rgba(0,0,0,.5);
+    }
+    /* 按钮本体 */
+    .lighter-btn {
+      position: absolute; bottom: 66px; left: 50%; transform: translateX(-50%) translateY(0px);
+      width: 24px; height: 14px;
+      background: linear-gradient(180deg, #e03020 0%, #a01808 100%);
+      border-radius: 4px 4px 3px 3px;
+      box-shadow: 0 4px 0 #6a0f05, 0 6px 10px rgba(0,0,0,.4);
+      cursor: pointer;
+      transition: transform .08s ease, box-shadow .08s ease;
+      z-index: 2;
+    }
+    .lighter-btn::after {
+      content: '';
+      position: absolute; top: 3px; left: 4px; right: 4px; height: 3px;
+      background: rgba(255,255,255,.25); border-radius: 2px;
+    }
+    .lighter-btn.pressed {
+      transform: translateX(-50%) translateY(4px);
+      box-shadow: 0 0px 0 #6a0f05, 0 2px 6px rgba(0,0,0,.4);
+    }
+
     /*
       打火机：bottom:20px, left:50% translateX(-60%)
       lighter-nozzle: bottom:116px (相对lighter) → 相对stage: 20+116=136px
@@ -214,9 +243,11 @@
       <div class="flame"></div>
     </div>
 
-    <div class="lighter" onclick="ignite(event)">
+    <div class="lighter" id="lighter">
       <div class="lighter-nozzle"></div>
       <div class="lighter-top"></div>
+      <div class="lighter-btn-base"></div>
+      <div class="lighter-btn" id="btn"></div>
       <div class="lighter-body"></div>
     </div>
   </div>
@@ -269,6 +300,19 @@
 
     window.addEventListener('load', alignElements);
     window.addEventListener('resize', alignElements);
+
+    // 按钮按压效果
+    const btn = document.getElementById('btn');
+    btn.addEventListener('pointerdown', (e) => {
+      btn.classList.add('pressed');
+      ignite(e);
+    });
+    btn.addEventListener('pointerup', () => {
+      setTimeout(() => btn.classList.remove('pressed'), 150);
+    });
+    btn.addEventListener('pointerleave', () => {
+      setTimeout(() => btn.classList.remove('pressed'), 150);
+    });
 
     // 覆盖 CSS show 的 transform，用 JS 控制
     function setCigShow(show){
