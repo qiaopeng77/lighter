@@ -66,13 +66,13 @@
     */
     .flame-wrap {
       position: absolute;
-      bottom: 126px;
+      bottom: 146px;
       left: 50%;
       transform: translateX(-60%);
       width: 36px; height: 60px;
       opacity: 0;
       transition: opacity .2s ease;
-      z-index: 10; /* 必须在最上层 */
+      z-index: 10;
     }
     .flame-wrap.show { opacity: 1; }
     .flame {
@@ -110,7 +110,8 @@
     */
     .cig-wrap {
       position: absolute;
-      bottom: 178px;
+      /* 火焰顶部=206px，烟头中心线(cy=11)对齐火焰顶部，bottom=206-11=195px */
+      bottom: 195px;
       left: 50%;
       transform-origin: left center;
       transform: translateX(120px) translateY(-80px) rotate(-35deg);
@@ -122,21 +123,19 @@
     }
     .cig-wrap.show {
       opacity: 1;
-      /* 
-        打火机偏移 translateX(-60%) 对应 left:50% 时，打火机中心在 50% - 60%*70px/2 ≈ 50% - 21px
-        喷嘴宽12px，中心在打火机中心
-        火焰中心x = 50% - 21px
-        cig-wrap left=50%, 烟头svg cx=6, 需要 translateX = -(50%偏移) + 火焰中心修正
-        实测最佳值: translateX(-27px)
-      */
-      transform: translateX(-27px) translateY(0px) rotate(-35deg);
+      /* 火焰中心x = left:50% + translateX(-60%) 的中心偏移
+         打火机宽70px，translateX(-60%)=-42px，打火机中心在 50%-42px+35px = 50%-7px
+         喷嘴宽12px居中，火焰宽36px居中，火焰中心x ≈ 50%-7px
+         cig-wrap left=50%，烟头在svg x=0~12，中心约x=6
+         需要 translateX 让 x=6 对准 50%-7px → translateX = -7px - 6px = -13px */
+      transform: translateX(-13px) translateY(0px) rotate(-35deg);
     }
 
     /* 烟雾跟随烟头位置 */
     .smoke-wrap {
       position: absolute;
-      bottom: 190px;
-      left: calc(50% - 27px);
+      bottom: 208px;
+      left: calc(50% - 13px);
       width: 44px; height: 80px;
       opacity: 0; transition: opacity .5s ease; pointer-events: none; z-index: 9;
     }
