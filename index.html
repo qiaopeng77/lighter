@@ -68,7 +68,7 @@
       position: absolute;
       bottom: 146px;
       left: 50%;
-      transform: translateX(-60%);
+      transform: translateX(-50%);
       width: 36px; height: 60px;
       opacity: 0;
       transition: opacity .2s ease;
@@ -110,7 +110,6 @@
     */
     .cig-wrap {
       position: absolute;
-      /* 火焰顶部=206px，烟头中心线(cy=11)对齐火焰顶部，bottom=206-11=195px */
       bottom: 195px;
       left: 50%;
       transform-origin: left center;
@@ -123,35 +122,35 @@
     }
     .cig-wrap.show {
       opacity: 1;
-      /* 火焰中心x = left:50% + translateX(-60%) 的中心偏移
-         打火机宽70px，translateX(-60%)=-42px，打火机中心在 50%-42px+35px = 50%-7px
-         喷嘴宽12px居中，火焰宽36px居中，火焰中心x ≈ 50%-7px
-         cig-wrap left=50%，烟头在svg x=0~12，中心约x=6
-         需要 translateX 让 x=6 对准 50%-7px → translateX = -7px - 6px = -13px */
-      transform: translateX(-13px) translateY(0px) rotate(-35deg);
+      /* 火焰居中于left:50%，宽36px，中心在50%+0px
+         打火机left:50% translateX(-50%)，宽70px，中心在50%
+         喷嘴宽12px居中，火焰中心x=50%
+         cig-wrap left=50%，烟头方形宽14px，中心x=7
+         translateX = -(7px) 让烟头中心对准火焰中心 */
+      transform: translateX(-7px) translateY(0px) rotate(-35deg);
     }
 
     /* 烟雾跟随烟头位置 */
     .smoke-wrap {
       position: absolute;
       bottom: 208px;
-      left: calc(50% - 13px);
-      width: 44px; height: 80px;
+      left: calc(50% - 22px);
+      width: 60px; height: 120px;
       opacity: 0; transition: opacity .5s ease; pointer-events: none; z-index: 9;
     }
     .smoke-wrap.show { opacity: 1; }
     .sp {
       position: absolute; bottom: 0; border-radius: 50%;
-      background: rgba(200,200,200,.4); animation: rise 2.4s ease-out infinite;
+      background: rgba(220,220,220,.6); animation: rise 2.4s ease-out infinite;
     }
-    .sp:nth-child(1){width:10px;height:10px;left:12px;animation-delay:0s;}
-    .sp:nth-child(2){width:15px;height:15px;left:20px;animation-delay:.5s;}
-    .sp:nth-child(3){width:9px;height:9px;left:8px;animation-delay:1s;}
-    .sp:nth-child(4){width:13px;height:13px;left:24px;animation-delay:1.6s;}
+    .sp:nth-child(1){width:18px;height:18px;left:16px;animation-delay:0s;}
+    .sp:nth-child(2){width:24px;height:24px;left:26px;animation-delay:.5s;}
+    .sp:nth-child(3){width:16px;height:16px;left:10px;animation-delay:1s;}
+    .sp:nth-child(4){width:22px;height:22px;left:30px;animation-delay:1.6s;}
     @keyframes rise {
-      0%   { transform: translateY(0) scale(.5); opacity: .55; }
-      50%  { transform: translateY(-38px) translateX(7px) scale(1.4); opacity: .25; }
-      100% { transform: translateY(-78px) translateX(-5px) scale(2.2); opacity: 0; }
+      0%   { transform: translateY(0) scale(.5); opacity: .7; }
+      50%  { transform: translateY(-50px) translateX(8px) scale(1.6); opacity: .35; }
+      100% { transform: translateY(-110px) translateX(-6px) scale(2.8); opacity: 0; }
     }
 
     .hint {
@@ -181,16 +180,21 @@
     <!-- 香烟：左=烟头(燃烧端)，右=滤嘴 -->
     <div class="cig-wrap" id="cig">
       <svg width="220" height="22" viewBox="0 0 220 22" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="6" cy="11" rx="6" ry="7" fill="#ff6600"/>
-        <ellipse cx="7.5" cy="11" rx="4" ry="5" fill="#ff9900"/>
-        <ellipse cx="9" cy="11" rx="2.5" ry="3" fill="#ffdd00"/>
-        <rect x="12" y="4" width="162" height="14" rx="3" fill="url(#cg)"/>
+        <!-- 烟头燃烧端：方形圆角 -->
+        <rect x="0" y="4" width="14" height="14" rx="2" fill="#cc4400"/>
+        <rect x="1" y="5" width="12" height="12" rx="1.5" fill="#ff6600"/>
+        <rect x="3" y="7" width="8" height="8" rx="1" fill="#ff9900"/>
+        <rect x="5" y="9" width="4" height="4" rx=".5" fill="#ffdd00"/>
+        <!-- 烟体白纸 -->
+        <rect x="14" y="4" width="160" height="14" rx="3" fill="url(#cg)"/>
         <line x1="58"  y1="4" x2="58"  y2="18" stroke="rgba(0,0,0,.06)" stroke-width=".8"/>
         <line x1="104" y1="4" x2="104" y2="18" stroke="rgba(0,0,0,.06)" stroke-width=".8"/>
         <line x1="148" y1="4" x2="148" y2="18" stroke="rgba(0,0,0,.06)" stroke-width=".8"/>
+        <!-- 滤嘴（右端） -->
         <rect x="174" y="4" width="42" height="14" rx="3" fill="#c8845a"/>
         <rect x="174" y="4" width="3"  height="14" fill="#b07040"/>
-        <rect x="12" y="5" width="162" height="3" rx="1.5" fill="rgba(255,255,255,.4)"/>
+        <!-- 高光 -->
+        <rect x="14" y="5" width="160" height="3" rx="1.5" fill="rgba(255,255,255,.4)"/>
         <defs>
           <linearGradient id="cg" x1="0" y1="0" x2="0" y2="22" gradientUnits="userSpaceOnUse">
             <stop offset="0%"   stop-color="#f5f5f5"/>
