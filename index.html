@@ -33,6 +33,7 @@
     .lighter {
       position: absolute; bottom: 20px; left: 50%; transform: translateX(-60%);
       width: 70px; height: 130px; cursor: pointer;
+      z-index: 1;
     }
     .lighter-body {
       position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -56,11 +57,22 @@
       width: 12px; height: 10px; background: #333; border-radius: 3px 3px 0 0;
     }
 
-    /* 火焰 — 在喷嘴正上方 */
+    /*
+      打火机：bottom:20px, left:50% translateX(-60%)
+      lighter-nozzle: bottom:116px (相对lighter) → 相对stage: 20+116=136px
+      nozzle高10px，顶部在 136+10=146px
+      flame-wrap: bottom:126px, 高60px → 顶部在 126+60=186px
+      flame底部贴nozzle顶部 ✓
+    */
     .flame-wrap {
-      position: absolute; bottom: 124px; left: 50%; transform: translateX(-60%);
+      position: absolute;
+      bottom: 126px;
+      left: 50%;
+      transform: translateX(-60%);
       width: 36px; height: 60px;
-      opacity: 0; transition: opacity .2s ease;
+      opacity: 0;
+      transition: opacity .2s ease;
+      z-index: 10; /* 必须在最上层 */
     }
     .flame-wrap.show { opacity: 1; }
     .flame {
@@ -84,31 +96,49 @@
       100% { transform: translateX(-50%) scaleX(1.03) scaleY(1.02) skewX(-1deg); }
     }
 
-    /* 香烟 — 从右上角斜入，烟头（左端）对接火焰顶部 */
+    /*
+      香烟烟头（左端 cx=6）需要对准火焰顶部：
+      火焰顶部 = bottom:186px, left: 50% + translateX(-60%) 的中心 ≈ left:50% - 21px(half of 36px * 0.6偏移)
+      
+      cig-wrap: bottom=175px (烟头中心线对齐火焰顶部附近)
+      left=50%, transform-origin=left center
+      show状态: translateX(-24px) 让烟头左端(cx=6)对准火焰中心x
+      rotate(-35deg) 斜向右上
+      
+      火焰中心x ≈ stage左50% + (-60%*36px/2) = 50% - ~11px
+      cig-wrap left=50%, 烟头在svg x=6, 需要 translateX 让 x=6 对准火焰中心
+    */
     .cig-wrap {
       position: absolute;
-      /* 火焰顶部大约在 bottom:178px，left:50%-60%偏移处 */
-      bottom: 152px;
+      bottom: 178px;
       left: 50%;
       transform-origin: left center;
-      /* 初始：右上角外 */
-      transform: translateX(100px) translateY(-70px) rotate(-35deg);
+      transform: translateX(120px) translateY(-80px) rotate(-35deg);
       opacity: 0;
       transition: transform .55s cubic-bezier(.22,1,.36,1), opacity .4s ease;
       width: 220px; height: 22px;
-      pointer-events: none; z-index: 5;
+      pointer-events: none;
+      z-index: 8;
     }
     .cig-wrap.show {
       opacity: 1;
-      /* 烟头左端对准火焰：translateX(-60%) 对应打火机偏移，再微调 */
-      transform: translateX(-38px) translateY(0) rotate(-35deg);
+      /* 
+        打火机偏移 translateX(-60%) 对应 left:50% 时，打火机中心在 50% - 60%*70px/2 ≈ 50% - 21px
+        喷嘴宽12px，中心在打火机中心
+        火焰中心x = 50% - 21px
+        cig-wrap left=50%, 烟头svg cx=6, 需要 translateX = -(50%偏移) + 火焰中心修正
+        实测最佳值: translateX(-27px)
+      */
+      transform: translateX(-27px) translateY(0px) rotate(-35deg);
     }
 
-    /* 烟雾从烟头飘出 */
+    /* 烟雾跟随烟头位置 */
     .smoke-wrap {
-      position: absolute; bottom: 172px; left: calc(50% - 68px);
+      position: absolute;
+      bottom: 190px;
+      left: calc(50% - 27px);
       width: 44px; height: 80px;
-      opacity: 0; transition: opacity .5s ease; pointer-events: none; z-index: 6;
+      opacity: 0; transition: opacity .5s ease; pointer-events: none; z-index: 9;
     }
     .smoke-wrap.show { opacity: 1; }
     .sp {
@@ -152,20 +182,15 @@
     <!-- 香烟：左=烟头(燃烧端)，右=滤嘴 -->
     <div class="cig-wrap" id="cig">
       <svg width="220" height="22" viewBox="0 0 220 22" xmlns="http://www.w3.org/2000/svg">
-        <!-- 烟头燃烧端（最左） -->
         <ellipse cx="6" cy="11" rx="6" ry="7" fill="#ff6600"/>
         <ellipse cx="7.5" cy="11" rx="4" ry="5" fill="#ff9900"/>
         <ellipse cx="9" cy="11" rx="2.5" ry="3" fill="#ffdd00"/>
-        <!-- 烟体白纸 -->
         <rect x="12" y="4" width="162" height="14" rx="3" fill="url(#cg)"/>
-        <!-- 纸纹 -->
         <line x1="58"  y1="4" x2="58"  y2="18" stroke="rgba(0,0,0,.06)" stroke-width=".8"/>
         <line x1="104" y1="4" x2="104" y2="18" stroke="rgba(0,0,0,.06)" stroke-width=".8"/>
         <line x1="148" y1="4" x2="148" y2="18" stroke="rgba(0,0,0,.06)" stroke-width=".8"/>
-        <!-- 滤嘴（右端） -->
         <rect x="174" y="4" width="42" height="14" rx="3" fill="#c8845a"/>
         <rect x="174" y="4" width="3"  height="14" fill="#b07040"/>
-        <!-- 高光 -->
         <rect x="12" y="5" width="162" height="3" rx="1.5" fill="rgba(255,255,255,.4)"/>
         <defs>
           <linearGradient id="cg" x1="0" y1="0" x2="0" y2="22" gradientUnits="userSpaceOnUse">
@@ -177,12 +202,12 @@
       </svg>
     </div>
 
+    <!-- 火焰：z-index:10，在最上层 -->
     <div class="flame-wrap" id="flame">
       <div class="flame"></div>
     </div>
 
     <div class="lighter" onclick="ignite(event)">
-      <div class="flame-wrap" style="display:none"></div>
       <div class="lighter-nozzle"></div>
       <div class="lighter-top"></div>
       <div class="lighter-body"></div>
