@@ -68,7 +68,7 @@
       position: absolute;
       bottom: 146px;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-60%);
       width: 36px; height: 60px;
       opacity: 0;
       transition: opacity .2s ease;
@@ -122,19 +122,17 @@
     }
     .cig-wrap.show {
       opacity: 1;
-      /* 火焰居中于left:50%，宽36px，中心在50%+0px
-         打火机left:50% translateX(-50%)，宽70px，中心在50%
-         喷嘴宽12px居中，火焰中心x=50%
-         cig-wrap left=50%，烟头方形宽14px，中心x=7
-         translateX = -(7px) 让烟头中心对准火焰中心 */
-      transform: translateX(-7px) translateY(0px) rotate(-35deg);
+      /* 火焰用translateX(-60%)，打火机宽70px，中心偏移=-60%*70/2+35=-21+35=14px左边
+         火焰宽36px，中心在 left:50% - 21px + 18px = 50% - 3px ≈ 50%
+         烟头方形宽14px，中心x=7，translateX=-7px对准火焰中心 */
+      transform: translateX(-10px) translateY(0px) rotate(-35deg);
     }
 
     /* 烟雾跟随烟头位置 */
     .smoke-wrap {
       position: absolute;
       bottom: 208px;
-      left: calc(50% - 22px);
+      left: calc(50% - 30px);
       width: 60px; height: 120px;
       opacity: 0; transition: opacity .5s ease; pointer-events: none; z-index: 9;
     }
