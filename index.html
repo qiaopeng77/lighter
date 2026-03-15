@@ -68,7 +68,7 @@
       position: absolute;
       bottom: 146px;
       left: 50%;
-      transform: translateX(-60%);
+      transform: translateX(-25px);
       width: 36px; height: 60px;
       opacity: 0;
       transition: opacity .2s ease;
@@ -122,17 +122,14 @@
     }
     .cig-wrap.show {
       opacity: 1;
-      /* 火焰用translateX(-60%)，打火机宽70px，中心偏移=-60%*70/2+35=-21+35=14px左边
-         火焰宽36px，中心在 left:50% - 21px + 18px = 50% - 3px ≈ 50%
-         烟头方形宽14px，中心x=7，translateX=-7px对准火焰中心 */
-      transform: translateX(-10px) translateY(0px) rotate(-35deg);
+      transform: translateX(-14px) translateY(0px) rotate(-35deg);
     }
 
     /* 烟雾跟随烟头位置 */
     .smoke-wrap {
       position: absolute;
       bottom: 208px;
-      left: calc(50% - 30px);
+      left: calc(50% - 25px);
       width: 60px; height: 120px;
       opacity: 0; transition: opacity .5s ease; pointer-events: none; z-index: 9;
     }
@@ -230,20 +227,75 @@
           cigEl=document.getElementById('cig'),smokeEl=document.getElementById('smoke'),
           hintEl=document.getElementById('hint');
     countEl.textContent=count;
+
+    // 动态对齐：用喷嘴的实际位置来定位火焰、烟头、烟雾
+    function alignElements(){
+      const nozzle = document.querySelector('.lighter-nozzle');
+      const stage  = document.querySelector('.stage');
+      const nr = nozzle.getBoundingClientRect();
+      const sr = stage.getBoundingClientRect();
+
+      // 喷嘴中心相对 stage
+      const nozzleCenterX = nr.left + nr.width/2 - sr.left;
+      const nozzleTopY    = nr.top - sr.top;
+
+      // 火焰：底部贴喷嘴顶部，水平居中于喷嘴
+      const flameW = 36, flameH = 60;
+      flameEl.style.left   = (nozzleCenterX - flameW/2) + 'px';
+      flameEl.style.bottom = (sr.height - nozzleTopY) + 'px';
+      flameEl.style.transform = 'none';
+
+      // 烟头（svg x=0 是烟头左端，宽14px，中心x=7）对准火焰顶部
+      // 火焰顶部Y = nozzleTopY - flameH
+      const cigBottom = sr.height - nozzleTopY + flameH - 11; // 11=烟头中心线cy
+      cigEl.style.bottom = cigBottom + 'px';
+      cigEl.style.left   = (nozzleCenterX - 7) + 'px'; // 烟头中心x=7对准喷嘴中心
+      cigEl.style.transform = 'translateX(120px) translateY(-80px) rotate(-35deg)';
+
+      // 烟雾：跟烟头位置
+      smokeEl.style.left   = (nozzleCenterX - 30) + 'px';
+      smokeEl.style.bottom = (sr.height - nozzleTopY + flameH) + 'px';
+      smokeEl.style.transform = 'none';
+    }
+
+    window.addEventListener('load', alignElements);
+    window.addEventListener('resize', alignElements);
+
+    // 覆盖 CSS show 的 transform，用 JS 控制
+    function setCigShow(show){
+      if(show){
+        const nozzle = document.querySelector('.lighter-nozzle');
+        const stage  = document.querySelector('.stage');
+        const nr = nozzle.getBoundingClientRect();
+        const sr = stage.getBoundingClientRect();
+        const nozzleCenterX = nr.left + nr.width/2 - sr.left;
+        cigEl.style.transform = 'translateX(0px) translateY(0px) rotate(-35deg)';
+        cigEl.style.opacity = '1';
+      } else {
+        const nozzle = document.querySelector('.lighter-nozzle');
+        const stage  = document.querySelector('.stage');
+        const nr = nozzle.getBoundingClientRect();
+        const sr = stage.getBoundingClientRect();
+        const nozzleCenterX = nr.left + nr.width/2 - sr.left;
+        cigEl.style.transform = 'translateX(120px) translateY(-80px) rotate(-35deg)';
+        cigEl.style.opacity = '0';
+      }
+    }
+
     function ignite(e){
       if(animating)return;animating=true;hintEl.style.opacity='0';
       const r=document.createElement('div');r.className='ripple';
       const s=60;r.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-s/2}px;top:${e.clientY-s/2}px`;
       document.body.appendChild(r);setTimeout(()=>r.remove(),700);
       flameEl.classList.add('show');
-      setTimeout(()=>cigEl.classList.add('show'),300);
+      setTimeout(()=>setCigShow(true),300);
       setTimeout(()=>smokeEl.classList.add('show'),850);
       setTimeout(()=>{
         count++;saveCount(count);countEl.textContent=count;
         countEl.classList.add('bump');setTimeout(()=>countEl.classList.remove('bump'),200);
       },950);
       setTimeout(()=>{
-        flameEl.classList.remove('show');cigEl.classList.remove('show');smokeEl.classList.remove('show');
+        flameEl.classList.remove('show');setCigShow(false);smokeEl.classList.remove('show');
         animating=false;hintEl.style.opacity='';
       },3000);
     }
