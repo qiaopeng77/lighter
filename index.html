@@ -254,10 +254,14 @@
     const KEY='cig_v4',KEY_DATE='cig_v4d';
     function getToday(){return new Date().toLocaleDateString('zh-CN');}
     function loadCount(){
-      if(localStorage.getItem(KEY_DATE)!==getToday()){localStorage.setItem(KEY,'0');localStorage.setItem(KEY_DATE,getToday());}
-      return parseInt(localStorage.getItem(KEY)||'0');
+      try {
+        if(localStorage.getItem(KEY_DATE)!==getToday()){localStorage.setItem(KEY,'0');localStorage.setItem(KEY_DATE,getToday());}
+        return parseInt(localStorage.getItem(KEY)||'0');
+      } catch(e){ return 0; }
     }
-    function saveCount(n){localStorage.setItem(KEY,String(n));localStorage.setItem(KEY_DATE,getToday());}
+    function saveCount(n){
+      try { localStorage.setItem(KEY,String(n));localStorage.setItem(KEY_DATE,getToday()); } catch(e){}
+    }
     let count=loadCount(),animating=false;
     const countEl=document.getElementById('count'),flameEl=document.getElementById('flame'),
           cigEl=document.getElementById('cig'),smokeEl=document.getElementById('smoke'),
@@ -313,19 +317,9 @@
     // 覆盖 CSS show 的 transform，用 JS 控制
     function setCigShow(show){
       if(show){
-        const nozzle = document.querySelector('.lighter-nozzle');
-        const stage  = document.querySelector('.stage');
-        const nr = nozzle.getBoundingClientRect();
-        const sr = stage.getBoundingClientRect();
-        const nozzleCenterX = nr.left + nr.width/2 - sr.left;
         cigEl.style.transform = 'translateX(0px) translateY(0px) rotate(-35deg)';
         cigEl.style.opacity = '1';
       } else {
-        const nozzle = document.querySelector('.lighter-nozzle');
-        const stage  = document.querySelector('.stage');
-        const nr = nozzle.getBoundingClientRect();
-        const sr = stage.getBoundingClientRect();
-        const nozzleCenterX = nr.left + nr.width/2 - sr.left;
         cigEl.style.transform = 'translateX(120px) translateY(-80px) rotate(-35deg)';
         cigEl.style.opacity = '0';
       }
